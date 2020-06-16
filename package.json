@@ -1,0 +1,23 @@
+{
+  "name": "backend_nodejs",
+  "version": "1.0.0",
+  "description": "Bases con Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljuare/Backend_NodeJS.git"
+  },
+  "author": "ljuare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ljuare/Backend_NodeJS/issues"
+  },
+  "homepage": "https://github.com/ljuare/Backend_NodeJS#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
