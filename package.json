@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/ljuare/Backend_NodeJS#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "express": "^4.17.1",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.10",
     "nodemon": "^2.0.4"
   }
 }
