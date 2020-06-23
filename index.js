@@ -25,11 +25,12 @@ const schemaContact = joi.object({ // Con esto especifico las condiciones que de
 
 //1) Crear la conexion con el Servidor de Email
 const miniOutlook = nodemailer.createTransport({ // Es una constante que se va a encargar de enviar los correos.
-    host: 'smtp.ethereal.email',
-    port: 587,
+// Para esconder datos sensibles, hardcodeo todo en un .env y lo llamo desde acá. Pero para que funcione hay que escribir ??? en la terminal y el nombre del archivo en cuestion (.env). Es decir, aca le estoy diciendo a la terminal que lea la información que está ahi
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-        user: 'judge.rodriguez0@ethereal.email',
-        pass: 'aKghYrKAcCeFQQRWyX'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -63,8 +64,15 @@ server.post('/enviar', function (request, response){ // Le digo al server que en
         miniOutlook.sendMail({
             from : datos.correo,
             to : "lucasjuarezsibello@gmail.com",
+            replyTo : datos.correo,
             subject : "Consulta desde Node",
-            html : "<h1>Hola viteh!</h1>"
+            html : `
+                <p>Datos del contacto:</p>
+                <p>Nombre: ${datos.nombre}</p>
+                <p>Email: ${datos.correo}</p>
+                <p>Mensaje:</p>
+                <blockquote>${datos.mensaje}</blockquote>
+            `
         }, function(error, info){
             const rta = error ? "Su consulta no pudo ser enviada" : "Gracias por su consulta :D"
             
