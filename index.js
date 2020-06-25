@@ -25,7 +25,7 @@ const schemaContact = joi.object({ // Con esto especifico las condiciones que de
 
 //1) Crear la conexion con el Servidor de Email
 const miniOutlook = nodemailer.createTransport({ // Es una constante que se va a encargar de enviar los correos.
-// Para esconder datos sensibles, hardcodeo todo en un .env y lo llamo desde acá. Pero para que funcione hay que escribir ??? en la terminal y el nombre del archivo en cuestion (.env). Es decir, aca le estoy diciendo a la terminal que lea la información que está ahi
+// Para esconder datos sensibles, hardcodeo todo en un .env y lo llamo desde acá. Pero para que funcione hay que escribir ???(Silvio va a buscar lo que hay q escribir) en la terminal y el nombre del archivo en cuestion (.env). Es decir, aca le estoy diciendo a la terminal que lea la información que está ahi
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     auth: {
