@@ -1,10 +1,13 @@
 const express = require('express')
+const hbs = require ('express-handlebars')
 const { MongoClient } = require('mongodb') // Esto significa: extraeme la propiedad mongoclient
 const {ObjectId} = require('mongodb') // Para hacer una busqueda por ID se necesita esta funcion que pertenece a MongoDB
+const jwt = require("jsonwebtoken") // Modulo para crear token de seguridad para las paginas
 const server = express()
 
 const urlencoded = express.urlencoded({extended : true})
 const json = express.json()
+const public = express.static(__dirname + "/public")
 
 const url = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process.env.MONGODB_HOST}/${process.env.MONGODB_BASE}?retryWrites=true&w=majority`
 
@@ -12,26 +15,55 @@ const connectDB = async () => { // Creo la funcion asincronica connectDB que va 
 
     const client = await MongoClient.connect(url, { useUnifiedTopology: true })
 
-    DB = await client.db("MercadoTECH")
+    return await client.db("MercadoTECH")
 
 }
 
-let DB = null // Creo una variable global que se va a encargar de guardar los datos luego de que me conecte con las bases de datos de MongoDB
+//let DB = null // Creo una variable global que se va a encargar de guardar los datos luego de que me conecte con las bases de datos de MongoDB
 
-connectDB() // Acá ejecuto la función que cree arriba
+//connectDB() // Acá ejecuto la función que cree arriba
+const port = process.env.PORT || 3000
 
 server.use(json)
-server.use(urlencoded) 
-server.listen(3000)
+server.use(urlencoded)
 
-server.get("/api", async (req, res) => {
+server.set("view engine", "handlebars") // Seteo el motor de vistas de handlebars
+server.engine("handlebars", hbs()) // Lo seteo en la constante que cree arriba. Con esto ya tengo configurado hbs en mi sistema
+
+server.use("/", public)
+server.listen(port)
+
+// Inicio de Rutas del Dashboard //
+server.get("/admin", async (req, res) => {
+    const DB = await connectDB()
+    
     const productos = await DB.collection('Productos')
     const resultado = await productos.find({}).toArray()
+
+    //console.log("Los productos son: ")
+    //console.log(resultado)
+
+    res.render("main", { layout : false, items : resultado, url : req.protocol + "://" + req.hostname + ":" + port }) // Acá arme la http para poder editar el producto
+
+    //res.render("formulario", {ACCION : "Nuevo"}) // El metodo render renderiza la plantilla html que yo le diga
+    // Esta plantilla ahora tiene q tener .handlebar y no html y debo especificar que no exite la carpeta layout que por defecto es obligatoria
+})
+server.get("/admin/editar/:id", async (req,res) => {
+    res.end(`Acá hay que editar el producto: ${req.params.id}`)
+})
+// Fin de Rutas del Dashboard //
+
+server.get("/api", async (req, res) => {
+    const DB = await connectDB()
+    const productos = await DB.collection('Productos')
+    const resultado = await productos.find({}).toArray()
+
 
     res.json( resultado )
 }) // <--- Obtener los datos
 
 server.get("/api/:id", async (req, res) => {
+    const DB = await connectDB()
     const productos = await DB.collection('Productos')
 
     const ID = req.params.id
@@ -50,7 +82,7 @@ server.post("/api", async (req, res) => {
         - Debe ser irrepetible
         - Debe ser autoasignable (lo asigna el sistema)
     */    
-    
+    const DB = await connectDB()
     const datos = req.body
     const productos = await DB.collection("Productos")
 
@@ -65,6 +97,7 @@ server.post("/api", async (req, res) => {
 }) // <-- Crear con datos
 
 server.put("/api/:id", async (req, res) => {
+    const DB = await connectDB()
     const ID = req.params.id
     const datos = req.body
 
@@ -80,6 +113,7 @@ server.put("/api/:id", async (req, res) => {
 }) // <-- Actualizar con datos
 
 server.delete("/api/:id", async (req, res) => {
+    const DB = await connectDB()
     const ID = req.params.id
 
     const productos = await DB.collection("Productos")
@@ -91,3 +125,40 @@ server.delete("/api/:id", async (req, res) => {
     res.json({ rta : result.ok })
 }) // <-- Eliminar con datos
 
+//////////// JWT Test /////////////
+const verifyToken = (req, res, next) => { // Este midleware 
+    // Aca hay que verificar el token...
+    const token = req.query.token
+
+
+    jwt.verify(token, process.env.JWT_PASSPHRASE, (error) => {
+        if(error){
+            res.json({rta : "Acceso no autorizado"})
+        } else {
+            req.user = data.usuario
+            next()
+        }
+    })
+}
+
+
+server.post("/login", (req,res) => {
+
+    const datos = req.body
+
+    if( datos.email == "pepito@gmail.com" & datos.clave == "HolaDonPepito2020" ){
+        
+        const token = jwt.sign({ usuario : datos.email , expiresIn : 300 }, process.env.JWT_PASSPHRASE) // payload es la informacion que quiero guardar del token para autorizar la auntenticacion - exp es el tiempo de duración que va a tener la autenticacion - phassphrase es mi contraseña suprsecreta que va a terminar de generar mi firma
+
+        res.json({rta : "Estas logeado", token})
+
+    } else {
+        res.json({rta : "Datos incorrectos"})
+    }
+
+})
+
+server.get("/check", verifyToken,  (req,res) => {
+    // Aca voy a decir si el token es valido o no...
+    res.end(`Bienvenido "${req.user}"`)
+})
