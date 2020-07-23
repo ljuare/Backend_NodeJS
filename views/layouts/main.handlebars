@@ -1,49 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="es-AR">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta name="author" content="ljuare">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-​
-    <!-- Bootstrap CSS -->
+​    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-​
+    ​​<!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">    
     <title>MercadoTECH</title>
+    <style>
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Roboto', sans-serif;
+      }
+    </style>
   </head>
   <body class="container-fluid">
     <h1 class="text-center p-5">MercadoTECH</h1>
     <section class="row">
       <div class="col-sm-8 offset-sm-2">
-        <a href="#" class="btn btn-success float-right my-3">Nuevo Producto</a>
-        <!-- LISTADO DE PRODUCTOS -->
-        <table class="table">
-          <thead>
-            <tr class="text-center">
-              <th width="5%">ID</th>
-              <th width="20%">NOMBRE</th>
-              <th width="20%">STOCK</th>
-              <th width="20%">PRECIO</th>
-              <th width="35%">ACCIONES</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each items}}
-            <!-- INICIO PRODUCTO -->
-            <tr class="text-center">
-              <td>{{this._id}}</td>
-              <td>{{this.nombre}}</td>
-              <td>{{this.stock}}</td>
-              <td>${{this.precio}}</td>
-              <td>
-                <a href="{{url}}/admin/editar/{{this._id}}" class="btn btn-primary">ACTUALIZAR</a>
-                <button id="#" class="btn btn-danger">ELIMINAR</button>
-              </td>
-            </tr>
-            <!-- FIN DE PRODUCTO -->
-            {{/each}}
-          </tbody>
-        </table>
-        <!-- FIN DE LOS PRODUCTOS -->
+        {{{body}}}
       </div>      
     </section>
 ​

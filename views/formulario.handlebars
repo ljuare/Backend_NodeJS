@@ -1,0 +1,56 @@
+<h1>{{accion}} Producto</h1>
+<form action="{{url}}/api/{{_id}}">
+	​
+	<label for="nombre">Ingrese nombre:</label>
+	<input class="form-control" type="text" name="nombre" placeholder="Ej: Jugo de Uva" value="{{nombre}}">
+
+	<br>
+	​
+	<label for="stock">Ingrese Stock:</label>
+	<input class="form-control" type="number" name="stock" placeholder="Ej: 9999" value="{{stock}}">
+	​
+	<br>
+	​
+	<label for="precio">Ingrese Precio:</label>
+	<input class="form-control" type="number" name="precio" placeholder="Ej: 1999.99" value="{{precio}}">
+	​
+	<br>
+	​
+	<label for="marca">Elija una marca:</label>
+	<select class="form-control" name="marca">
+		<option value="apple">Apple</option>
+		<option value="samsung">Samsung</option>
+		<option value="google">Google</option>
+		<option value="lg">LG</option>
+	</select>
+	​
+	<br>
+	​
+	<label for="detalle">Ingrese un detalle:</label>
+	<textarea class="form-control" name="detalle" cols="30" rows="10" placeholder="Max: 100 caracteres">{{detalle}}</textarea>
+	​
+	<br>
+	​
+	<input class="btn btn-primary" type="submit" value="Agregar">
+	​
+</form>
+<script>
+	document.querySelector("form").onsubmit = async function(){
+		e.preventDefault()
+		
+		const datos = Object.fromEntries( new FormData(e.target))
+		const configs = {
+			method : {{metodo}}, {{!-- POST o PUT --}}
+			body : JSON.stringify(datos),
+			header : {
+				"Content-Type" : "application/json"
+			}
+		}
+
+		const request = await fetch(e.target.action, configs)
+		const response = await request.json()
+		const message = response.rta ? "ok" : "fail"
+
+		window.location = "{{url}}/admin?=" + message
+ 	}
+</script>

@@ -1,0 +1,38 @@
+<a href="{{url}}/admin/nuevo" class="btn btn-success float-right my-3">Nuevo Producto</a>
+<!-- LISTADO DE PRODUCTOS -->
+<table class="table">
+  <thead>
+    <tr class="text-center">
+      <th width="5%">ID</th>
+      <th width="20%">NOMBRE</th>
+      <th width="20%">STOCK</th>
+      <th width="20%">PRECIO</th>
+      <th width="35%">ACCIONES</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+    <!-- INICIO PRODUCTO -->
+    <tr class="text-center">
+      <td>{{this._id}}</td>
+      <td>{{this.nombre}}</td>
+      <td>{{this.stock}}</td>
+      <td>${{this.precio}}</td>
+      <td>
+        <a href="{{../url}}/admin/editar/{{this._id}}" class="btn btn-primary">ACTUALIZAR</a>
+        <button id="#" class="btn btn-danger">ELIMINAR</button>
+      </td>
+    </tr>
+    <!-- FIN DE PRODUCTO -->
+    {{/each}}
+  </tbody>
+</table>
+<!-- FIN DE LOS PRODUCTOS -->
+
+
+
+
+
+
+
+
